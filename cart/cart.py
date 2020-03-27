@@ -27,7 +27,8 @@ class Cart(object):
         for product in products:
             self.cart[str(product.id)]['product'] = product
 
-        for item in self.cart.values():
+        for item in self.cart.values():###
+            item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
             yield item
 
@@ -36,27 +37,28 @@ class Cart(object):
         if product_id not in self.cart:
             # 만약 제품 정보가 Decimal 이라면 세션에 저장할 때는 str로 형변환 해서 저장하고
             # 꺼내올 때는 Decimal로 형변환해서 사용해야 한다.
-            self.cart[product_id] = {'quantity':0, 'price':product.price}
+            self.cart[product_id] = {'quantity':0, 'price':str(product.price)}
         if is_update:
             self.cart[product_id]['quantity'] = quantity
         else:
             self.cart[product_id]['quantity'] += quantity
         self.save()
 
-    def remove(self, product):
-        product_id = str(product.id)
-        if product_id in self.cart:
-            del(self.cart[product_id])
-        self.save()
-
     def save(self):
         self.session[settings.CART_ID] = self.cart
         self.session.modified = True
 
+    def remove(self, product):
+        product_id = str(product.id)
+        if product_id in self.cart:
+            del(self.cart[product_id])
+            self.save()
+
     def clear(self):
-        self.cart = {}
-        self.save()
+        self.session[settings.CART_ID] = {}
+        self.session.modified = True
 
     # 전체 제품 가격
-    def get_total_price(self):
-        return sum(item['quantity']*item['price'] for item in self.cart.values())
+    def get_product_total(self):
+        # return sum(item['quantity']*item['price'] for item in self.cart.values())
+        return sum(Decimal(item['price'])*item['quantity'] for item in self.cart.values())

@@ -30,4 +30,11 @@ def remove(request, product_id):
     cart.remove(product)
     return redirect('cart:detail')
 
-# Create your views here.
+def detail(request):
+    cart = Cart(request)
+
+    #카트 객체로부터 노출 시킬 제품을 가져옴. 제품 수량을 수정하기 위해 AddProductForm을 제품마다 하나씩 추가
+    for product in cart:
+        product['quantity_form'] = AddProductForm(initial = {'quantity':product['quantity'], 'is_update':True})
+
+        return render(request, 'cart/detail.html', {'cart': cart})

@@ -13,9 +13,10 @@
                 <h1 class="display-6">{{product.name}}</h1>
                 <p><span class="badge badge-secondary">Price</span> {{product.price}}</p>
 
-                <form action="" method="post">
-                <!-- <form action="{% url 'cart:product_add' product.id %}" method="post"> -->
-                    <!-- {{add_to_cart}} -->
+                <!-- action의 url cart = app name / product_add = url name -->
+                <form action="{% url 'cart:product_add' %}" method="post">
+                  <!-- product_detail에서 가져온 'add_to_cart':add_to_cart 데이터를 쓰겠다 -->
+                    {{add_to_cart}}
                     {% csrf_token %}
                     <input type="submit" class="btn btn-primary btn-sm" value="장바구니에 담기">
                 </form>
@@ -27,5 +28,5 @@
     </div>
 
 
-    
+
 {% endblock %}

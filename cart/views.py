@@ -18,4 +18,16 @@ def add(request, product_id):
 
         return redirect('cart:detail')
 
+
+
+
+def remove(request, product_id):
+    #리퀘스트 값을 카트 객체 생성
+    cart = Cart(request)
+    #상품의 아이디 값으로 해당 상품이 있는지 조회
+    product = get_object_or_404(Product, id=product_id)
+    #카트의 세션 삭제
+    cart.remove(product)
+    return redirect('cart:detail')
+
 # Create your views here.

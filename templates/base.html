@@ -37,9 +37,9 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                 <a class="nav-link" href="{% url 'account_login' %}">Login</a>
             {% endif %}
         </li>
-        
+
         <li class="nav-item active"></a>
-          <a class="nav-link btn btn-online-success" href="">Cart
+          <a class="nav-link btn btn-online-success" href="{% url 'cart:detail' %}">Cart
             {% if cart|length > 0 %}
               ${{cart.get_product_total}} with {{cart|length}} items
             {% else %}

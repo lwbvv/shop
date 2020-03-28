@@ -1,6 +1,9 @@
 from decimal import Decimal
 from django.conf import settings
 from shop.models import Product
+from coupon.models import Coupon
+
+from log import log
 
 class Cart(object):
     def __init__(self, request):
@@ -11,6 +14,9 @@ class Cart(object):
             cart = self.session[settings.CART_ID] = {}
             # 세션에 이미 있는 키 값에 대한 값을 수정하면 수동으로 저장
         self.cart = cart
+        #쿠폰을 사용 할 수 있도록 세션에서 쿠폰 가져오기
+        self.coupon_id = self.session.get('coupon_id')
+        log("카트 init 쿠폰 아이디:", self.coupon_id)
 
     def __len__(self):
         # 요소가 몇개인지 갯수를 반환해주는 함수
@@ -56,9 +62,28 @@ class Cart(object):
 
     def clear(self):
         self.session[settings.CART_ID] = {}
+        #장바구니를 비웠을 때 쿠폰도 삭제
+        self.session['coupon_id'] = None
         self.session.modified = True
+
 
     # 전체 제품 가격
     def get_product_total(self):
         # return sum(item['quantity']*item['price'] for item in self.cart.values())
         return sum(Decimal(item['price'])*item['quantity'] for item in self.cart.values())
+
+    @property
+    def coupon(self):
+        if self.coupon_id:
+            return Coupon.objects.get(id=self.coupon_id) #데이터 베이스에서 쿠폰 가져오기
+
+    #할인 금액
+    def get_discount_total(self):
+        if self.coupon:
+            if self.get_product_total() >= self.coupon.amount:
+                return self.coupon.amount
+        return Decimal(0)
+
+    #할인 금액이 반영된 상품 금액
+    def get_total_price(self):
+        return self.get_product_total() - self.get_discount_total()

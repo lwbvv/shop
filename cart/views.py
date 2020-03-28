@@ -5,6 +5,8 @@ from shop.models import Product
 from .forms import AddProductForm
 from .cart import Cart
 
+from coupon.forms import AddCouponForm
+
 @require_POST
 def add(request, product_id):
     cart = Cart(request)
@@ -32,9 +34,9 @@ def remove(request, product_id):
 
 def detail(request):
     cart = Cart(request)
-
+    add_coupon = AddCouponForm()
     #카트 객체로부터 노출 시킬 제품을 가져옴. 제품 수량을 수정하기 위해 AddProductForm을 제품마다 하나씩 추가
     for product in cart:
         product['quantity_form'] = AddProductForm(initial = {'quantity':product['quantity'], 'is_update':True})
 
-        return render(request, 'cart/detail.html', {'cart': cart})
+        return render(request, 'cart/detail.html', {'cart': cart, 'add_coupon': add_coupon}) #템플릿 변수로 카트와 쿠폰 전달

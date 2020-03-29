@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.naver',
     'cart',
-    'coupon'
+    'coupon',
+    'order',
 ]
 
 MIDDLEWARE = [
@@ -139,14 +140,14 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_DEFAULT_ACL = None
-STATICFILES_LOCATION = 'static'
+# STATICFILES_LOCATION = 'static'
 MEDIAFILES_LOCATION = 'media'
-STATICFILES_STORAGE = 'config.custom_storage.StaticStorage'
+# STATICFILES_STORAGE = 'config.custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'config.custom_storage.MediaStorage'
-STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+# STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
-STATIC_ROOT = '%s/static' % STATIC_URL
+# STATIC_ROOT = '%s/static' % STATIC_URL
 
 
 # Internationalization
@@ -172,3 +173,20 @@ USE_TZ = True
 
 
 CART_ID = 'cart_in_session'
+
+
+IAMPORT_KEY = '5747224316962987'
+IAMPORT_SECRET = 'GTgLZoju6LdoZHJbnFNAzCiAiHhlJeFq7Wb6lvBrhOQgwzsTffuOSNpbuGweUcE29Q9ulKWDyMU5mmYB'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+#
+# STATIC_URL = '/static/'
+# STATIC_DIR = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = [
+#     STATIC_DIR,
+# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
